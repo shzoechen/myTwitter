@@ -45,17 +45,20 @@ var server = http.createServer(function(request, response) {
 			var message = JSON.parse(body);
 			messages.push(message);
 			console.log(message);
-			sendRequest(message).then(function(){
-				response.end(JSON.stringify(""));
+			sendRequest(message, function(posts){
+	    	//console.log('posts in request post',posts);
+
+			response.end(JSON.stringify(posts));
 			});
+			//response.end(JSON.stringify(messages));
 		})
 	}
 });
 
-var sendRequest = function(message) {
+var sendRequest = function(message, callback) {
 	console.log("in sendRequest;");
 
-	var params = {screen_name: message, count: 5};
+	var params = {screen_name: message, count: 25};
 
 	return T.get('statuses/user_timeline', params, function(error, tweets, response){
 	  if (!error) {
@@ -64,8 +67,9 @@ var sendRequest = function(message) {
 
 	    	posts[i] = {};
 	    	posts[i].text = tweets[i].text;
-	    	console.log(posts);
 	  	}
+	    	console.log('posts',posts);
+	    	callback(posts);
 	  }
 	});
 
