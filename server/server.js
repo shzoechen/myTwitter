@@ -29,8 +29,9 @@ var server = http.createServer(function(request, response) {
 	if(request.method === "GET") {
 		if(request.url === "/") {
 			//to send messages to client as objects instead of string.
+			console.log('posts',posts);
 			headers['Content-Type'] = "application/json";
-			response.end(JSON.stringify(messages));
+			response.end(JSON.stringify(posts));
 		}
 	}
 	if(request.method === "POST") {
@@ -44,9 +45,9 @@ var server = http.createServer(function(request, response) {
 			var message = JSON.parse(body);
 			messages.push(message);
 			console.log(message);
-			sendRequest(message);
-			//response.end(JSON.stringify(messages));
-			response.end(JSON.stringify(""));
+			sendRequest(message).then(function(){
+				response.end(JSON.stringify(""));
+			});
 		})
 	}
 });
@@ -56,12 +57,13 @@ var sendRequest = function(message) {
 
 	var params = {screen_name: message, count: 5};
 
-	T.get('statuses/user_timeline', params, function(error, tweets, response){
+	return T.get('statuses/user_timeline', params, function(error, tweets, response){
 	  if (!error) {
 	  	console.log('length', tweets.length);
 	  	for(var i = 0; i < tweets.length; i++) {
 
-	    	posts[i]['text'] = tweets[i].text;
+	    	posts[i] = {};
+	    	posts[i].text = tweets[i].text;
 	    	console.log(posts);
 	  	}
 	  }
