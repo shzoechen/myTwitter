@@ -5,17 +5,27 @@ var port = 3000;
 
 var ip = "127.0.0.1";
 
-var messages = [];
+var messages = [{username:"zoe", text: "hello"}, {username:"ani", text: "hi"}, {username:"zoe", text: "ok."}];
 
 var server = http.createServer(function(request, response) {
+	response.writeHead(200, headers);
+
+	console.log('request.method:', request.method);
+
+	if(request.method ==="OPTIONS") {
+		response.end();
+	}
+
 	if(request.method === "GET") {
 		if(request.url === "/") {
-			response.writeHead(200);
+			//to send messages to client as objects instead of string.
+			headers['Content-Type'] = "application/json";
 			response.end(JSON.stringify(messages));
 		}
-		response.end('hello');
 	}
 	if(request.method === "POST") {
+		//headers['Content-Type'] = "application/json";
+
 		var body = "";
 		request.on('data', function(chunk) {
 			body += chunk;
@@ -29,6 +39,13 @@ var server = http.createServer(function(request, response) {
 	}
 });
 
+var headers = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "application/json",
+  "access-control-max-age": 10 // Seconds.
+};
+
 console.log("Listening on http://" + ip + ":" + port);
 
-server.listen(port, ip);
+server.listen(port);
