@@ -1,5 +1,15 @@
 var http = require('http');
-//var url = require('url');
+var https = require('https');
+var Twit = require('twit');
+
+var T = new Twit({
+  consumer_key:         'mMUtWkRXLwpzAwsvBtUI52wkW',
+  consumer_secret:      'hVEUq2PFA9gmBdqNK4KVqWuDm1Siamt84qRvcREQnl44Smm8cC',
+  access_token:         '4851590771-yL5zB9jmou3dNZ21cDZKOg1smg5FeGIHXax6ji7',
+  access_token_secret:  '2aMIL0hkPHLxOdx2vnZ74uLXlCZoSKtUZmfXfFNMDyEp9',
+});
+
+var posts = [];
 
 var port = 3000;
 
@@ -33,11 +43,33 @@ var server = http.createServer(function(request, response) {
 		request.on('end', function() {
 			var message = JSON.parse(body);
 			messages.push(message);
-			console.log(messages);
-			response.end(JSON.stringify(messages));
+			console.log(message);
+			sendRequest(message);
+			//response.end(JSON.stringify(messages));
+			response.end(JSON.stringify(""));
 		})
 	}
 });
+
+var sendRequest = function(message) {
+	console.log("in sendRequest;");
+
+	var params = {screen_name: message, count: 5};
+
+	T.get('statuses/user_timeline', params, function(error, tweets, response){
+	  if (!error) {
+	  	console.log('length', tweets.length);
+	  	for(var i = 0; i < tweets.length; i++) {
+
+	    	posts[i]['text'] = tweets[i].text;
+	    	console.log(posts);
+	  	}
+	  }
+	});
+
+
+
+}
 
 var headers = {
   "access-control-allow-origin": "*",

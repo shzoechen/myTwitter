@@ -1,4 +1,56 @@
-//var _ = require('underscore');
+angular.module('myTweets', [])
+.run(function() {
+	console.log("hello");
+	app.init();
+})
+.factory('State', function(HttpRequest){
+	function init(){
+		//getMessages();
+
+		$('#submit').on('click', function(e) {
+			e.preventDefault();
+			var value = $('#message').val();
+			$('#message').val('');
+			console.log('value',value);
+			sendMessages(value);
+		});
+	}
+
+	function getMessages(){
+		$.ajax({
+			url: "http://localhost:3000/",
+			type: "GET",
+			//contentType: 'application/json',//||||| content error
+			success: function(resp) {
+				console.log(typeof resp);
+				app.addMessage(resp);
+			},
+			error: function(err) {
+				console.log("ajax get failed", err);
+			}
+		});
+	}
+
+	function sendMessages(value) {
+		console.log('value in sendMessages',value);
+		$.ajax({
+			type: "POST",
+			url: "http://localhost:3000/",
+			data: JSON.stringify(value),
+			success: function(resp) {
+				console.log('resp in sendMessages', resp)
+				//app.getMessages();
+			},
+			error: function(err) {
+				console.log("ajax post failed.", err);
+			}
+		});
+	}
+
+})
+.controller('myTweetsCtrl', function($scope) {
+	console.log($scope.username);
+});
 
 var app = {
 
@@ -11,7 +63,7 @@ var app = {
 			var value = $('#message').val();
 			$('#message').val('');
 			console.log(value);
-			app.sendMessages({username:"zoe", text:value});
+			//app.sendMessages(value);
 		});
 
 	},
@@ -62,4 +114,4 @@ var app = {
 	}
 };
 
-app.init();
+//app.init();

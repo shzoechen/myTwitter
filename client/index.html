@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myTweets">
 <head>
-	<title>Chatter Box</title>
+	<title>My Tweets Posts</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
-<body>
-	<div>Chatter Box</div>
+<body ng-controller="myTweetsCtrl">
+	<div>Please enter the username</div>
 	<form  method="post">
-		<input id="message" type="text">
+		<input id="message" type="text" ng-model="username">
 		<button id="submit" type="submit">Submit</button>
 	</form>
 	<div class="container">
-		<ul id="messages">
+		<ul id="posts">
 
 		</ul>
 	</div>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+	<script src='bower_components/angular/angular.min.js'></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 	<script src="app.js"></script>
 </body>
