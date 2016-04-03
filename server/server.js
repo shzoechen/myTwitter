@@ -46,11 +46,8 @@ var server = http.createServer(function(request, response) {
 			messages.push(message);
 			console.log(message);
 			sendRequest(message, function(posts){
-	    	//console.log('posts in request post',posts);
-
-			response.end(JSON.stringify(posts));
+				response.end(JSON.stringify(posts));
 			});
-			//response.end(JSON.stringify(messages));
 		})
 	}
 });
@@ -63,10 +60,13 @@ var sendRequest = function(message, callback) {
 	return T.get('statuses/user_timeline', params, function(error, tweets, response){
 	  if (!error) {
 	  	console.log('length', tweets.length);
+	  	posts = [];
 	  	for(var i = 0; i < tweets.length; i++) {
 
 	    	posts[i] = {};
 	    	posts[i].text = tweets[i].text;
+	    	posts[i].user = tweets[i].user.name;
+	    	posts[i].time = tweets[i].created_at;
 	  	}
 	    	console.log('posts',posts);
 	    	callback(posts);
